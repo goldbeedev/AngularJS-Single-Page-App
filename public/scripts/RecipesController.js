@@ -6,13 +6,11 @@ angular.module('app')
 
 $scope.$location = $location;
 
-
-
 //get recipe data for page load
 dataService.getRecipes(function(response){
 	console.log(response.data);
 	$scope.recipes = response.data;
-
+	console.log($scope.recipes.length);
 
 	});
 // get all the categories for listing purposes
@@ -73,13 +71,24 @@ dataService.getRecipesCategory($scope.currentCategory, function(response){
 
 
 //function to delete recipes 
-$scope.deleteRecipe = function(recipe, $index) {
-	console.log("This is the recipe you are trying to delete: " + recipe.name);
-    $scope.recipes.splice($index, 1);
+// $scope.deleteRecipe = function(recipe, $index) {
+// 	console.log("This is the recipe you are trying to delete: " + recipe.name);
+//     $scope.recipes.splice($index, 1);
+//     console.log($scope.recipes.length);
 
-} //end delete recipe.
+// } //end delete recipe.
+
+$scope.deleteRecipe = function($index) {
+	dataService.deleteRecipe($scope.recipes[$index]._id, function(){
+		dataService.getRecipes(function(response){
+			$scope.recipes = response.data;
 
 
+		});
+
+
+	});
+}
 
 
 

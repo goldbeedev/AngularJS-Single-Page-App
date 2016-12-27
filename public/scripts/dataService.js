@@ -16,7 +16,7 @@ angular.module('app')
 	}
 	//get a recipe by ID
 	this.getRecipesId = function(id, callback) {
-		$http.get('http://localhost:5000/api/recipes/{id}')
+		$http.get('http://localhost:5000/api/recipes/' + id)
 		.then(callback)
 
 	}

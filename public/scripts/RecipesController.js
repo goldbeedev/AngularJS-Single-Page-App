@@ -1,6 +1,6 @@
 (function(){
 'use strict'
-
+//start the angular module and create a controller
 angular.module('app')
 .controller('RecipesController', function($scope, dataService, $location){
 
@@ -12,13 +12,15 @@ dataService.getRecipes(function(response){
 	$scope.recipes = response.data;
 	console.log($scope.recipes.length);
 
-	});
+	});//end getRecipes
+
 // get all the categories for listing purposes
 dataService.getCategories(function(response){
 	console.log("This is the categories array: " + response.data);
 	$scope.categories = response.data;
 
-	}); //end 
+	}); //end getCategories
+
 //create the currentCategory property on the scope
 $scope.currentCategory = null;
 
@@ -70,25 +72,29 @@ dataService.getRecipesCategory($scope.currentCategory, function(response){
 	}; //end getRecipeCategory function
 
 
-//function to delete recipes 
-// $scope.deleteRecipe = function(recipe, $index) {
-// 	console.log("This is the recipe you are trying to delete: " + recipe.name);
-//     $scope.recipes.splice($index, 1);
-//     console.log($scope.recipes.length);
-
-// } //end delete recipe.
+//function to delete recipes
 
 $scope.deleteRecipe = function($index) {
 	dataService.deleteRecipe($scope.recipes[$index]._id, function(){
+		//call the getRecipes dataService and refresh the recipes on the scope.
 		dataService.getRecipes(function(response){
 			$scope.recipes = response.data;
 
 
-		});
+		}); //end dataService.getRecipes
 
 
-	});
-}
+	}); //end dataService.deleteRecipe
+} //end scope.deleteRecipe
+
+//create a recipe object to add with the addrecipe dataService
+
+
+
+
+
+
+
 
 
 

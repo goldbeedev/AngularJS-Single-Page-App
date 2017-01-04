@@ -1,9 +1,13 @@
 (function(){
 'use strict'
 
+//initialize the angular module
 angular.module('app')
-.controller('RecipeDetailController',['$scope', 'dataService', '$location', function($scope, dataService, $location){
+.controller('RecipeDetailController',['$scope', 'dataService', '$location', '$routeParams', '$log', function($scope, dataService, $location, $routeParams, $log){
 
+
+
+//set the location on the scope.
 $scope.location = $location;
 
 //get all categories for the select category dropdown
@@ -12,7 +16,7 @@ dataService.getCategories(function(response){
 	console.log(response.data);
 });
 
-
+//set the current path on the scope.
 	$scope.path = $location.path().split('/')[2];
     console.log($scope.path);
 
@@ -25,73 +29,89 @@ dataService.getCategories(function(response){
 
 });
 
-//get current recipe's ID  - would I use a location method for the id parameter? How to inject the id from the url?
+ 
+//see if there is a recipe in the path, if so request the ID and set the recipe on the scope to equal the response data
+if ($scope.path) {
 
-//add something that sets recipe.name to add recipe if adding, if editing make it the recipe name being edited
-//look into adding edit true and manipulating data, potentailly look at the location url 
-
-$scope.getId = function() {
-
+	console.log("yes there is a path");
 
 	dataService.getRecipesId($scope.path, function(response){
 	console.log("this is the get recipe id data:" + response.data);
 	$scope.recipe = response.data;
 
-//show recipe name when editing if it exists, if not show add new recipe text
-if ($scope.recipe.length >= 0) {
-	$scope.NameShow = false;
+}); //end dataService.getRecipesID
+
 } else {
-	$scope.NameShow = true;
-} //end if scope.recipe.length
+// otherwise create an empty recipe object on the scope to edit
+	$scope.recipe = {
+		name: "",
+		description: "",
+		category: "",
+		prepTime: 0,
+		cookTime: 0,
+		ingredients: [],
+		steps: []
+	} //end $scope.recipe
 
-}); //end dataService.getRecipesId
+	console.log("no path exists!");
 
-} // end $scope.getId 
-
-$scope.getId();
-
-//add recipe
-
-$scope.addRecipe = function() {
-
-	dataService.AddRecipe = function(recipe, callback) {
-
-	}	//ng-model? from the name input field?
-
-
-
-}
+} //end else
+	
 
 //function to update recipe upon saving
 $scope.updateRecipe = function() {
+
+//if we are editing, use put to update the data.
+if($scope.path){
 
 	dataService.putID($scope.recipe._id, $scope.recipe, function(response){
 
 		$scope.recipe = response.data;
 		$location.url('/');
 
-	});
+	}, function(error){
+		if (error) {$scope.showError = true}
+		$log.error(error.data.errors);
+		//add ingredient errors to the scope to show specific errors related to adding ingredients.
+		$scope.ingredientErrors = error.data.errors.ingredients;
+		//add category errors to the scope to show specific errors related to category selection.
+		$scope.categoryErrors = error.data.errors.categories;
+		//add steps errors to the scope to show specific errors related to adding new steps.
+		$scope.stepErrors = error.data.errors.steps;
 
 
-	};
+	}); //end dataService.putID
+
+
+} else {
+   
+   //otherwise add new recipe
+   dataService.addRecipe($scope.recipe, function(response){
+        
+        //go back to the home page after adding the recipe 
+        $location.url('/');
+
+}, function(error){
+		if (error) {$scope.showError = true}
+		$log.error(error.data.errors);
+		//add ingredient errors to the scope to show specific errors related to adding ingredients.
+		$scope.ingredientErrors = error.data.errors.ingredients;
+		//add category errors to the scope to show specific errors related to category selection.
+		$scope.categoryErrors = error.data.errors.categories;
+		//add steps errors to the scope to show specific errors related to adding new steps.
+		$scope.stepErrors = error.data.errors.steps;
+
+   }); //end dataService.addRecipe
+
+} //end else
+
+	}; //end scope.updateRecipe
 
 
 
 //add a cancel function to the scope to cancel adding/editing a recipe
 $scope.cancel = function() {
  $location.url('/');
-}
-
-//add items to the scope from the recipe data to populate  - I dont think this is necessary, probably remove.
-$scope.getCurrentItem = function(selectedItem) {
-
-	console.log($scope.recipe.ingredients[1].foodItem);
-
-	$scope.SelectedIndex = $scope.recipe.ingredients.selectedIndex;
-
-	console.log($scope.recipe.ingredients.indexOf(selectedItem));
-
-
 }
 
 //set foodItems on the scope
@@ -112,6 +132,7 @@ $scope.deleteRecipeStep = function($index) {
 //function to add recipe steps 
 $scope.addRecipeStep = function() {
 
+
 //push new object into the recipe steps array, set key value pairs to a description with an empty string.
 	$scope.recipe.steps.push(
 
@@ -120,17 +141,22 @@ $scope.addRecipeStep = function() {
 		"description": ""
 	}
 
-	);
+	); //end recipe.steps.push
 
 	console.log($scope.recipe.steps);
+
+} //end addRecipeStep
+
+//function to delete an ingredient
+$scope.deleteRecipeIngredient = function($index) {
+	$scope.recipe.ingredients.splice($index, 1);
 
 }
 
 //function to add a new ingredient
 $scope.addIngredient = function() {
 
- if ($scope.recipe.ingredients) { //come back to this tomorrow, this may not be the best way.
-//push new ingredient object into ingredients on the recipe scope.
+	//push an ingredients object into the scope ingredients.
 	$scope.recipe.ingredients.push(
 
  	{
@@ -141,46 +167,9 @@ $scope.addIngredient = function() {
 
 
 		);
-} else {
-	$scope.recipe
-}
 
-}
+} //end addIngredient
 
 
 }]); //end controller
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-})();
+})(); //end self invoked function

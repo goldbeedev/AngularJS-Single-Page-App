@@ -21,15 +21,15 @@ angular.module('app')
 
 	}
 	//updates a recipe by ID
-	this.putID = function(id, data, callback) {
+	this.putID = function(id, data, callback, error) {
 		$http.put('http://localhost:5000/api/recipes/' + id, data)
-		.then(callback)
+		.then(callback, error)
 
 	}
 	//adds a recipe
-	this.AddRecipe = function(recipe, callback) {
+	this.addRecipe = function(recipe, callback, error) {
 		$http.post('http://localhost:5000/api/recipes', recipe)
-		.then(callback);
+		.then(callback, error);
 	}
 	//deletes a recipe by ID
 	this.deleteRecipe = function(id, callback) {
@@ -51,26 +51,5 @@ angular.module('app')
 
 
 
-})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-})();
+}); //end service
+})(); //end self invoked function

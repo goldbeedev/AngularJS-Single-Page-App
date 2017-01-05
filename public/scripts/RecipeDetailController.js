@@ -72,6 +72,8 @@ if($scope.path){
 	}, function(error){
 		if (error) {$scope.showError = true}
 		$log.error(error.data.errors);
+		//add name errors to the scope to show specific errors related to the name field
+		$scope.nameErrors = error.data.errors.name;
 		//add ingredient errors to the scope to show specific errors related to adding ingredients.
 		$scope.ingredientErrors = error.data.errors.ingredients;
 		//add category errors to the scope to show specific errors related to category selection.
@@ -94,6 +96,8 @@ if($scope.path){
 }, function(error){
 		if (error) {$scope.showError = true}
 		$log.error(error.data.errors);
+		//add name errors to the scope to show specific errors related to the name field
+		$scope.nameErrors = error.data.errors.name;
 		//add ingredient errors to the scope to show specific errors related to adding ingredients.
 		$scope.ingredientErrors = error.data.errors.ingredients;
 		//add category errors to the scope to show specific errors related to category selection.

@@ -15,7 +15,8 @@
     .module('app')
     .config(config);
 
-  function config($routeProvider) {
+  function config($routeProvider, $locationProvider) {
+    $locationProvider.hashPrefix('');
     $routeProvider
       .when('/', {
         controller: 'RecipesController',

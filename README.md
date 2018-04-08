@@ -1,5 +1,5 @@
 # Single Page App - AngularJS Recipe App
-This project was created while learning Angular during the Team Treehouse Full Stack Tech Degree, it is a simple app showcasing the ability to use Angular in conjunction with an API to display information on a single page.
+This project was created while learning Angular during the Team Treehouse Full Stack Tech Degree, it is a simple recipes app showcasing the ability to use Angular in conjunction with a recipe API to display information on a single page.
 
 ## Getting Started
 Clone or download - https://github.com/goldbeedev/Treehouse-Single-Page-App-Project-9.git
